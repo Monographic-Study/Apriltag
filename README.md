@@ -1,5 +1,14 @@
 # Apriltag
 
+# v1.1 Test
+
+Commiter : **Cody**
+Branch Name : **cody**
+
+## Feature
+
+1. test
+
 # v1.0 Necessary Setup & Homework
 
 Commiter : **Aslan**
@@ -15,7 +24,7 @@ Commiter : **Aslan**
 
 Commiter : **Aslan**
 
-## Feratures
+## Features
 
 1.  Github command
 
