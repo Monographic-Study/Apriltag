@@ -13,7 +13,7 @@ Commiter : **Aslan**
 
 Commiter : **Aslan**
 
-## Feratures
+## Features
 
 1. Finish necessary setup
 2. Homework
