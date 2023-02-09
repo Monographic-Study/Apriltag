@@ -1,10 +1,18 @@
 # Apriltag
 
+# v1.1 Test 
+
+Commiter : **Bokai**
+</br>
+Branch Name : **bokai**
+
+## Features v1.1 Test
+
 # v1.0 Necessary Setup & Homework
 
 Commiter : **Aslan**
 
-## Feratures
+## Features
 
 1. Finish necessary setup
 2. Homework
