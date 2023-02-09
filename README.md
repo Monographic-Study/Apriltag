@@ -1,5 +1,16 @@
 # Apriltag
 
+# v0.2 Necessary Setup & Homework
+
+Commiter : **Aslan**
+
+## Feratures
+
+1. Finish necessary setup
+2. Homework
+    1. There are two todos for you to do
+        - You can use `Ctrl + F` to finsh where to do your home work. 
+
 # v0.1 Setup Surroundings & GitTips
 
 Commiter : **Aslan**
