@@ -33,12 +33,12 @@ public class Robot extends TimedRobot {
   PhotonTrackedTarget target;
   Transform3d bestCameraToTarget;
 
-  /** This function is called periodically during autonomous. */
+  /* This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     // TODO_01
     /*
-     * 
+     *  宣告並獲取 Apriltag 要用的資料 
      */
     
     // Example Code
