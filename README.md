@@ -1,6 +1,6 @@
 # Apriltag
 
-# v0.2 Necessary Setup & Homework
+# v1.0 Necessary Setup & Homework
 
 Commiter : **Aslan**
 
