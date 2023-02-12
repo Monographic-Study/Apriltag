@@ -40,10 +40,12 @@ public class Robot extends TimedRobot {
     /*
      *  宣告並獲取 Apriltag 要用的資料 
      */
-    
-    // Example Code
-    //  result = ???;
-    //  hasTarget = ???;
+    int targetID = target.getFiducialId();
+    double poseAmbiguity = target.getPoseAmbiguity();
+    bestCameraToTarget = target.getBestCameraToTarget();
+    Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();  // Example Code
+    result = camera.getLatestResult() ;                                         //  result = ???;
+    hasTarget = result.hasTarget();                                           //  hasTarget = ???;
 
     // TODO_02
     /*
@@ -55,6 +57,17 @@ public class Robot extends TimedRobot {
      * Task 2. 思考可能會有問題的地方
      *  PS 2. 提供一個資訊：如果鏡頭中沒有 Apriltag 但是你還跟他要資料的話整個程式都會掛掉，想一下要怎麼處理
      */
+    double distanceTotarget = PhotonUtils.getDis.getDistanceToPose(robotPose, targetPose);
+    SimVisionSystem simVision =
+            new SimVisionSystem(
+                    "photonvision",
+                    camDiagFOV,
+                    new Transform3d(
+                            new Translation3d(x, 0, camHeightOffGround), new Rotation3d(0, camPitch, 0)),
+                    maxLEDRange,
+                    camResolutionWidth,
+                    camResolutionHeight,
+                    minTargetArea);
   }
 
   /**
