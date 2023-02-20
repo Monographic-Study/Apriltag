@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -13,6 +15,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,16 +28,52 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 
-  PhotonCamera camera = new PhotonCamera("WEB_CAM");
-  PhotonPipelineResult result;
-  boolean hasTarget;
-  List<PhotonTrackedTarget> targets;
+  PhotonCamera mPVCamera = new PhotonCamera("WEB_CAM");
+  boolean mHasTarget;
+  PhotonPipelineResult mResult;
+  PhotonTrackedTarget mTarget;
+  double mX;
+
+  private Joystick js1 = new Joystick(0);
+  private DigitalOutput LeftLight = new DigitalOutput(1);
+  private DigitalOutput RightLight = new DigitalOutput(5);
+
+  // PhotonCamera camera = new PhotonCamera("WEB_CAM");
+  // PhotonPipelineResult result;
+  // boolean hasTarget;
+  // List<PhotonTrackedTarget> targets;
 
   // Define target
-  PhotonTrackedTarget target;
-  Transform3d bestCameraToTarget;
+  // PhotonTrackedTarget target;
+  // Transform3d bestCameraToTarget;
+
+  // Joystick
+  Joystick js = new Joystick(0);
+
+  @Override
+  public void robotInit() {}
+
+  @Override
+  public void robotPeriodic() {}
+
+  @Override
+  public void teleopInit() {}
 
   /* This function is called periodically during autonomous. */
+  @Override
+  public void teleopPeriodic() {
+    // LeftLight.set(true);
+
+    // if( js1.getRawButton(1) ) LeftLight.set(false); 
+
+    // SmartDashboard.putBoolean("Button", js1.getRawButton(1));
+    // SmartDashboard.putBoolean("LeftLight", LeftLight.get());
+  }
+
+  @Override
+  public void autonomousInit() {
+  }
+
   @Override
   public void autonomousPeriodic() {
     // TODO_01
@@ -44,6 +84,8 @@ public class Robot extends TimedRobot {
     // Example Code
     //  result = ???;
     //  hasTarget = ???;
+    mResult = mPVCamera.getLatestResult();
+    mHasTarget = mResult.hasTargets();
 
     // TODO_02
     /*
@@ -55,12 +97,42 @@ public class Robot extends TimedRobot {
      * Task 2. 思考可能會有問題的地方
      *  PS 2. 提供一個資訊：如果鏡頭中沒有 Apriltag 但是你還跟他要資料的話整個程式都會掛掉，想一下要怎麼處理
      */
+
+    LeftLight.set(true);
+    RightLight.set(true);
+
+    if( mHasTarget ){
+      mTarget = mResult.getBestTarget();
+      Transform3d mCameraOutput = getCameratoTarget();
+      mX = mCameraOutput.getX();
+    }
+
+    if( mX != 0 ){
+      if( mX < 0.2 && mX > -0.2 ){
+        LeftLight.set(false);
+        RightLight.set(false);
+      }else if( mX > 0.2 ){
+        LeftLight.set(false);
+      }else{
+        RightLight.set(false);
+      }
+    }
+
+    SmartDashboard.putBoolean("HasTarget", mHasTarget);
+    SmartDashboard.putNumber("X", mX);
+    SmartDashboard.putBoolean("LeftLight", LeftLight.get());
+    SmartDashboard.putBoolean("RightLight", RightLight.get());
+    //   if( mX < 0.2 && mX > -0.2 ){
+    //     LeftLight.set(false);
+    //   }else if( mX > 0.2 ) LeftLight.set(false);
+    //   else( mX < -0.2 ) RightLight.set(true);
+    // }
   }
 
   /**
    * Get the transform that maps camera ( X = forward, Y = left, Z = up ) to apriltag
    **/
   public Transform3d getCameratoTarget(){
-    return hasTarget == true ? target.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
+    return mHasTarget == true ? mTarget.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
   }
 }
