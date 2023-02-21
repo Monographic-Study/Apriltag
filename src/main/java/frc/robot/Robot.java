@@ -102,20 +102,15 @@ public class Robot extends TimedRobot {
     if( mHasTarget ){
       mTarget = mResult.getBestTarget();
       Transform3d mCameraOutput = getCameratoTarget();
-      mX = mCameraOutput.getX();
+      mX = mCameraOutput.getY();
     }
 
-    if( mX != 0 ){
-      if( mX < 0.2 ){
-        Light.set(true);
-      }else{
-        Light.set(false);
-      }
-    }
+    if( mX > 0.2 || mX < -0.2 ) Light.set(false);
+    else Light.set(true);
 
     SmartDashboard.putBoolean("HasTarget", mHasTarget);
     SmartDashboard.putNumber("X", mX);
-    SmartDashboard.putBoolean("LeftLight", Light.get());
+    SmartDashboard.putBoolean("Light", !Light.get());
   }
 
   /**
