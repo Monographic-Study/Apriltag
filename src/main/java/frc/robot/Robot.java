@@ -35,8 +35,7 @@ public class Robot extends TimedRobot {
   double mX;
 
   private Joystick js1 = new Joystick(0);
-  private DigitalOutput LeftLight = new DigitalOutput(1);
-  private DigitalOutput RightLight = new DigitalOutput(5);
+  private DigitalOutput Light = new DigitalOutput(1);
 
   // PhotonCamera camera = new PhotonCamera("WEB_CAM");
   // PhotonPipelineResult result;
@@ -72,6 +71,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Light.set(true);
+    mX = 0;
   }
 
   @Override
@@ -98,9 +99,6 @@ public class Robot extends TimedRobot {
      *  PS 2. 提供一個資訊：如果鏡頭中沒有 Apriltag 但是你還跟他要資料的話整個程式都會掛掉，想一下要怎麼處理
      */
 
-    LeftLight.set(true);
-    RightLight.set(true);
-
     if( mHasTarget ){
       mTarget = mResult.getBestTarget();
       Transform3d mCameraOutput = getCameratoTarget();
@@ -108,25 +106,16 @@ public class Robot extends TimedRobot {
     }
 
     if( mX != 0 ){
-      if( mX < 0.2 && mX > -0.2 ){
-        LeftLight.set(false);
-        RightLight.set(false);
-      }else if( mX > 0.2 ){
-        LeftLight.set(false);
+      if( mX < 0.2 ){
+        Light.set(true);
       }else{
-        RightLight.set(false);
+        Light.set(false);
       }
     }
 
     SmartDashboard.putBoolean("HasTarget", mHasTarget);
     SmartDashboard.putNumber("X", mX);
-    SmartDashboard.putBoolean("LeftLight", LeftLight.get());
-    SmartDashboard.putBoolean("RightLight", RightLight.get());
-    //   if( mX < 0.2 && mX > -0.2 ){
-    //     LeftLight.set(false);
-    //   }else if( mX > 0.2 ) LeftLight.set(false);
-    //   else( mX < -0.2 ) RightLight.set(true);
-    // }
+    SmartDashboard.putBoolean("LeftLight", Light.get());
   }
 
   /**
