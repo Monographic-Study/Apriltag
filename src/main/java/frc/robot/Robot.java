@@ -28,14 +28,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 
-  PhotonCamera mPVCamera = new PhotonCamera("WEB_CAM");
-  boolean mHasTarget;
-  PhotonPipelineResult mResult;
-  PhotonTrackedTarget mTarget;
-  double mX;
+  PhotonCamera m_PVCamera = new PhotonCamera("WEB_CAM");
+  boolean m_HasTarget;
+  PhotonPipelineResult m_Result;
+  PhotonTrackedTarget m_Target;
+  double m_X;
 
-  private Joystick js1 = new Joystick(0);
-  private DigitalOutput Light = new DigitalOutput(1);
+  private Joystick m_js1 = new Joystick(0);
+  private DigitalOutput m_Light = new DigitalOutput(1);
 
   // PhotonCamera camera = new PhotonCamera("WEB_CAM");
   // PhotonPipelineResult result;
@@ -45,9 +45,6 @@ public class Robot extends TimedRobot {
   // Define target
   // PhotonTrackedTarget target;
   // Transform3d bestCameraToTarget;
-
-  // Joystick
-  Joystick js = new Joystick(0);
 
   @Override
   public void robotInit() {}
@@ -60,63 +57,37 @@ public class Robot extends TimedRobot {
 
   /* This function is called periodically during autonomous. */
   @Override
-  public void teleopPeriodic() {
-    // LeftLight.set(true);
-
-    // if( js1.getRawButton(1) ) LeftLight.set(false); 
-
-    // SmartDashboard.putBoolean("Button", js1.getRawButton(1));
-    // SmartDashboard.putBoolean("LeftLight", LeftLight.get());
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void autonomousInit() {
-    Light.set(true);
-    mX = 0;
+    m_Light.set(true);
+    m_X = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-    // TODO_01
-    /*
-     *  宣告並獲取 Apriltag 要用的資料 
-     */
-    
-    // Example Code
-    //  result = ???;
-    //  hasTarget = ???;
-    mResult = mPVCamera.getLatestResult();
-    mHasTarget = mResult.hasTargets();
-
-    // TODO_02
-    /*
-     * PS 0. Task 順序不一定是對的喔，可能要先 2. 再 1. 也可能先 1. 再 2. 也可能要 1. 2. 同時
-     * Task 1. 輸出從鏡頭得到的資料
-     *  PS 1. 輸出資料所使用的函式
-     *    PS 1-1. 輸出鏡頭中是否有 Apriltag : SmartDashboard.putBoolean( ???, ??? );
-     *    PS 1-2. 輸出鏡頭跟 Apriltag 的距離 : SmartDashboard.putNumber( ???, ??? );
-     * Task 2. 思考可能會有問題的地方
-     *  PS 2. 提供一個資訊：如果鏡頭中沒有 Apriltag 但是你還跟他要資料的話整個程式都會掛掉，想一下要怎麼處理
-     */
+    m_Result = mPVCamera.getLatestResult();
+    m_HasTarget = mResult.hasTargets();
 
     if( mHasTarget ){
-      mTarget = mResult.getBestTarget();
+      m_Target = mResult.getBestTarget();
       Transform3d mCameraOutput = getCameratoTarget();
-      mX = mCameraOutput.getY();
+      m_X = mCameraOutput.getY();
     }
 
-    if( mX > 0.2 || mX < -0.2 ) Light.set(false);
+    if( m_X > 0.2 || mX < -0.2 ) Light.set(false);
     else Light.set(true);
 
-    SmartDashboard.putBoolean("HasTarget", mHasTarget);
-    SmartDashboard.putNumber("X", mX);
-    SmartDashboard.putBoolean("Light", !Light.get());
+    SmartDashboard.putBoolean("HasTarget", m_HasTarget);
+    SmartDashboard.putNumber("X", m_X);
+    SmartDashboard.putBoolean("Light", !m_Light.get());
   }
 
   /**
    * Get the transform that maps camera ( X = forward, Y = left, Z = up ) to apriltag
    **/
   public Transform3d getCameratoTarget(){
-    return mHasTarget == true ? mTarget.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
+    return m_HasTarget == true ? m_Target.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
   }
 }
