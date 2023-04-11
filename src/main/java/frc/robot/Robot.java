@@ -35,16 +35,17 @@ public class Robot extends TimedRobot {
   double m_X;
 
   private Joystick m_js1 = new Joystick(0);
-  private DigitalOutput m_Light = new DigitalOutput(1);
+  private DigitalOutput m_LeftLight = new DigitalOutput(1);
+  private DigitalOutput m_RightLight = new DigitalOutput(4);
 
-  // PhotonCamera camera = new PhotonCamera("WEB_CAM");
-  // PhotonPipelineResult result;
-  // boolean hasTarget;
-  // List<PhotonTrackedTarget> targets;
+  PhotonCamera camera = new PhotonCamera("WEB_CAM");
+  PhotonPipelineResult result;
+  boolean hasTarget;
+  List<PhotonTrackedTarget> targets;
 
   // Define target
-  // PhotonTrackedTarget target;
-  // Transform3d bestCameraToTarget;
+  PhotonTrackedTarget target;
+  Transform3d bestCameraToTarget;
 
   @Override
   public void robotInit() {}
@@ -57,37 +58,67 @@ public class Robot extends TimedRobot {
 
   /* This function is called periodically during autonomous. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if( m_js1.getRawButton(2) ){
+      m_LeftLight.set(false);
+      m_RightLight.set(false);
+    }
+  }
 
   @Override
   public void autonomousInit() {
-    m_Light.set(true);
+    m_LeftLight.set(true);
+    m_RightLight.set(true);
     m_X = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-    m_Result = mPVCamera.getLatestResult();
-    m_HasTarget = mResult.hasTargets();
+    m_Result = m_PVCamera.getLatestResult();
+    m_HasTarget = m_Result.hasTargets();
 
-    if( mHasTarget ){
-      m_Target = mResult.getBestTarget();
+    if( m_HasTarget ){
+      m_Target = m_Result.getBestTarget();
       Transform3d mCameraOutput = getCameratoTarget();
       m_X = mCameraOutput.getY();
     }
 
-    if( m_X > 0.2 || mX < -0.2 ) Light.set(false);
-    else Light.set(true);
+    if( m_X > 0.2 ){
+      m_LeftLight.set(false);
+      m_RightLight.set(false);
+    }else{
+      m_LeftLight.set(true);
+      m_RightLight.set(true);
+    }
+
+    if( m_X < -0.2 ){
+      m_LeftLight.set(false);
+      m_RightLight.set(false);
+    }else{
+      m_LeftLight.set(true);
+      m_RightLight.set(true);
+    }
 
     SmartDashboard.putBoolean("HasTarget", m_HasTarget);
     SmartDashboard.putNumber("X", m_X);
-    SmartDashboard.putBoolean("Light", !m_Light.get());
+    SmartDashboard.putBoolean("LeftLight", !m_LeftLight.get());
+    SmartDashboard.putBoolean("RightLight", !m_RightLight.get());
   }
 
   /**
    * Get the transform that maps camera ( X = forward, Y = left, Z = up ) to apriltag
    **/
   public Transform3d getCameratoTarget(){
-    return m_HasTarget == true ? m_Target.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
+    Transform3d res;
+    if( m_HasTarget == true ){
+      res = m_Target.getBestCameraToTarget();
+    }else{
+      res = new Transform3d( 
+        new Translation3d(0,0,0), 
+        new Rotation3d(0,0,0) 
+      );
+    }
+
+    return res;
   }
 }
