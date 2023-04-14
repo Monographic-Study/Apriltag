@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 
-  PhotonCamera m_PVCamera = new PhotonCamera("WEB_CAM");
+  PhotonCamera m_PVCamera = new PhotonCamera("Limelight1");
   boolean m_HasTarget;
   PhotonPipelineResult m_Result;
   PhotonTrackedTarget m_Target;
@@ -38,12 +38,12 @@ public class Robot extends TimedRobot {
   private DigitalOutput m_LeftLight = new DigitalOutput(1);
   private DigitalOutput m_RightLight = new DigitalOutput(4);
 
-  PhotonCamera camera = new PhotonCamera("WEB_CAM");
-  PhotonPipelineResult result;
-  boolean hasTarget;
-  List<PhotonTrackedTarget> targets;
+  // PhotonCamera camera = new PhotonCamera("WEB_CAM");
+  // PhotonPipelineResult result;
+  // boolean hasTarget;
+  // List<PhotonTrackedTarget> targets;
 
-  // Define target
+  // // Define target
   PhotonTrackedTarget target;
   Transform3d bestCameraToTarget;
 
