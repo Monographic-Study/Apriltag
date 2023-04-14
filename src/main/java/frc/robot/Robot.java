@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 
-  PhotonCamera m_PVCamera = new PhotonCamera("Limelight1");
+  PhotonCamera m_PVCamera = new PhotonCamera("WEB_CAM");
   boolean m_HasTarget;
   PhotonPipelineResult m_Result;
   PhotonTrackedTarget m_Target;
@@ -36,16 +36,16 @@ public class Robot extends TimedRobot {
 
   private Joystick m_js1 = new Joystick(0);
   private DigitalOutput m_LeftLight = new DigitalOutput(1);
-  private DigitalOutput m_RightLight = new DigitalOutput(4);
+  private DigitalOutput m_RightLight = new DigitalOutput(1);
 
   // PhotonCamera camera = new PhotonCamera("WEB_CAM");
   // PhotonPipelineResult result;
   // boolean hasTarget;
   // List<PhotonTrackedTarget> targets;
 
-  // // Define target
-  PhotonTrackedTarget target;
-  Transform3d bestCameraToTarget;
+  // Define target
+  // PhotonTrackedTarget target;
+  // Transform3d bestCameraToTarget;
 
   @Override
   public void robotInit() {}
@@ -58,12 +58,7 @@ public class Robot extends TimedRobot {
 
   /* This function is called periodically during autonomous. */
   @Override
-  public void teleopPeriodic() {
-    if( m_js1.getRawButton(2) ){
-      m_LeftLight.set(false);
-      m_RightLight.set(false);
-    }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void autonomousInit() {
@@ -83,15 +78,7 @@ public class Robot extends TimedRobot {
       m_X = mCameraOutput.getY();
     }
 
-    if( m_X > 0.2 ){
-      m_LeftLight.set(false);
-      m_RightLight.set(false);
-    }else{
-      m_LeftLight.set(true);
-      m_RightLight.set(true);
-    }
-
-    if( m_X < -0.2 ){
+    if( m_X > 0.2 || m_X < -0.2 ){
       m_LeftLight.set(false);
       m_RightLight.set(false);
     }else{
@@ -109,16 +96,6 @@ public class Robot extends TimedRobot {
    * Get the transform that maps camera ( X = forward, Y = left, Z = up ) to apriltag
    **/
   public Transform3d getCameratoTarget(){
-    Transform3d res;
-    if( m_HasTarget == true ){
-      res = m_Target.getBestCameraToTarget();
-    }else{
-      res = new Transform3d( 
-        new Translation3d(0,0,0), 
-        new Rotation3d(0,0,0) 
-      );
-    }
-
-    return res;
+    return m_HasTarget == true ? m_Target.getBestCameraToTarget() : new Transform3d( new Translation3d(0,0,0), new Rotation3d(0,0,0) );
   }
 }
